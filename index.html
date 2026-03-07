@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Ziidi · Money Market Fund | Kenya</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- SweetAlert2 -->
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.3/dist/sweetalert2.min.css" rel="stylesheet">
+    <!-- Separate CSS file -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- header unchanged (same green) -->
+        <div class="top-bar">
+            <div class="logo">
+                <h1>Ziidi Fund</h1>
+                <span>Grow your money · Powered by Safaricom</span>
+            </div>
+            <div class="status-chip">
+                <i class="fa-solid fa-chart-line"></i> 14% p.a.
+            </div>
+        </div>
+
+        <!-- hero card (same style) -->
+        <div class="quick-panel">
+            <h2>Fixed returns, zero risk</h2>
+            <p>Lock funds for 24h – 30d · instant payout</p>
+            <div class="tag-cloud">
+                <span class="tag-new">24h</span>
+                <span class="tag-new">3 days</span>
+                <span class="tag-new">7 days</span>
+                <span class="tag-new">14 days</span>
+                <span class="tag-new">30 days</span>
+            </div>
+        </div>
+
+        <!-- Category Tabs (same pill tabs) -->
+        <div class="scroll-tabs" id="tabContainer">
+            <button class="tab-pill" data-category="all">All tenures</button>
+            <button class="tab-pill" data-category="daily">24h / 3d</button>
+            <button class="tab-pill" data-category="weekly">Weekly</button>
+            <button class="tab-pill" data-category="monthly">Monthly</button>
+            <button class="tab-pill" data-category="unlimited">14d+</button>
+        </div>
+
+        <!-- Investment Grid injected by JS -->
+        <div class="bundles-grid" id="bundles-container"></div>
+
+        <!-- Footer (same) -->
+        <div class="footer">
+            <div class="footer-logo">Ziidi</div>
+            <div>© 2025 · licensed by CMA</div>
+        </div>
+    </div>
+
+    <!-- scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.3/dist/sweetalert2.all.min.js"></script>
+    <!-- Separate JS file -->
+    <script src="script.js"></script>
+</body>
+</html>
