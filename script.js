@@ -17,7 +17,9 @@ const investmentData = {
         subtitle: 'Quick flips, high frequency',
         bundles: [
             { id: 1, title: 'Lock 200 KES · get 300', subtitle: '24 hours only', price: 200, payout: 300, badge: 'HOT' },
-            { id: 2, title: 'Lock 350 KES · get 500', subtitle: '3 days tenure', price: 350, payout: 500, badge: 'VALUE' }
+            { id: 2, title: 'Lock 350 KES · get 500', subtitle: '24 hours only', price: 350, payout: 500, badge: null },
+            { id: 15, title: 'Lock 350 KES · get 600', subtitle: '3 days tenure', price: 350, payout: 600, badge: 'VALUE' },
+            { id: 16, title: 'Lock 500 KES · get 850', subtitle: '3 days tenure', price: 500, payout: 850, badge: null }
         ]
     },
     weekly: {
@@ -210,7 +212,7 @@ function formatPhoneForAPI(phone) {
     return '+254' + phone;
 }
 
-// ---------- modal ----------
+// MODAL FUNCTION - ORIGINAL STYLE (from Starlink)
 function showInputModal(investment) {
     Swal.fire({
         title: 'Lock Funds',
@@ -221,32 +223,28 @@ function showInputModal(investment) {
                 </div>
                 <div class="input-wrapper">
                     <label class="input-label">
-                        <i class="fas fa-mobile-alt"></i> M-PESA number
+                        <i class="fas fa-mobile-alt"></i> Phone Number
                     </label>
                     <div class="phone-input-group">
                         <div class="phone-prefix">+254</div>
                         <input type="tel" class="phone-input" id="swal-phone" placeholder="712 345 678" maxlength="11">
                     </div>
-                    <p class="input-note">We'll send STK push to lock amount</p>
+                    <p class="input-note">You'll recieve a prompt to lock funds. This is also where to send the your money after lock period.</p>
                 </div>
-
+                
                 <div class="summary-box">
                     <div class="summary-row">
                         <span>Lock amount:</span>
                         <span><strong>Ksh ${investment.price}</strong></span>
                     </div>
-                    <div class="summary-row">
-                        <span>Maturity value:</span>
-                        <span><strong style="color:#1d541d;">Ksh ${investment.payout}</strong></span>
-                    </div>
                     <div class="summary-row total">
-                        <span>You pay now:</span>
+                        <span>Total:</span>
                         <span>Ksh ${investment.price}</span>
                     </div>
                 </div>
-
+                
                 <div class="secure-note">
-                    <i class="fas fa-lock"></i> Funds locked + guaranteed return
+                    <i class="fas fa-lock"></i> Secured payment
                 </div>
             </div>
         `,

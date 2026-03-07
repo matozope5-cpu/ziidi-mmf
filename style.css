@@ -20,92 +20,92 @@ body {
     padding: 0.8rem 0.6rem;
 }
 
-/* top bar with gradient */
+/* top bar - deeper green (Starlink style) */
 .top-bar {
-    background: linear-gradient(145deg, #1a5e1a, #134513);
+    background: #1a4f1a;
     backdrop-filter: blur(8px);
-    border-radius: 28px;
-    padding: 0.8rem 1.2rem;
-    margin-bottom: 1rem;
+    border-radius: 20px;
+    padding: 0.7rem 1rem;
+    margin-bottom: 0.8rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border: 1px solid #388e3c;
-    box-shadow: 0 10px 18px -6px rgba(20, 70, 20, 0.4);
+    border: 1px solid #2d6a2d;
+    box-shadow: 0 4px 12px rgba(0, 40, 0, 0.2);
 }
 
 .logo h1 {
-    font-size: 1.4rem;
+    font-size: 1.25rem;
     font-weight: 700;
     color: #ffffff;
-    letter-spacing: -0.4px;
+    letter-spacing: -0.3px;
     line-height: 1.2;
-    text-shadow: 0 2px 4px rgba(0,20,0,0.4);
+    text-shadow: none; /* remove any existing text-shadow */
 }
 
 .logo span {
     font-size: 0.7rem;
-    color: #c6e9c6;
+    color: #c0e0c0;
     display: block;
     font-weight: 500;
-    margin-top: 2px;
+    margin-top: 0;
 }
 
 .status-chip {
-    background: #2d8c2d;
-    border-radius: 40px;
-    padding: 0.5rem 1rem;
-    font-size: 0.75rem;
+    background: #2d7a2d;
+    border-radius: 30px;
+    padding: 0.4rem 0.9rem;
+    font-size: 0.7rem;
     font-weight: 600;
     color: white;
     display: flex;
     align-items: center;
-    gap: 0.4rem;
-    border: 1px solid #6ab04c;
-    box-shadow: inset 0 1px 3px rgba(255,255,255,0.3);
+    gap: 0.3rem;
+    border: 1px solid #4fa04f;
+    box-shadow: none; /* remove inset shadow */
 }
 
-/* hero panel with subtle pattern */
+/* hero card - more green (Starlink style) */
 .quick-panel {
-    background: linear-gradient(125deg, #1f631f, #175017);
-    border-radius: 28px;
-    padding: 1.4rem 1.4rem;
-    margin-bottom: 1.2rem;
-    border: 1px solid #3a8b3a;
-    box-shadow: 0 12px 0 #0e3a0e, 0 6px 16px rgba(0,40,0,0.3);
+    background: #1d541d;
+    border-radius: 20px;
+    padding: 1.2rem 1.2rem;
+    margin-bottom: 1rem;
+    border: 1px solid #2d6a2d;
+    box-shadow: 0 6px 0 #0f3a0f;
 }
 
 .quick-panel h2 {
     color: #ffffff;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     font-weight: 700;
-    margin-bottom: 0.3rem;
-    text-shadow: 0 2px 3px #1d3b1d;
+    margin-bottom: 0.2rem;
+    text-shadow: none; /* remove any existing text-shadow */
 }
 
 .quick-panel p {
-    color: #d0f0d0;
-    font-size: 0.85rem;
-    margin-bottom: 1rem;
+    color: #c8e6c8;
+    font-size: 0.8rem;
+    margin-bottom: 0.8rem;
     font-weight: 400;
 }
 
 .tag-cloud {
     display: flex;
-    gap: 0.5rem;
+    gap: 0.4rem;
     flex-wrap: wrap;
 }
 
 .tag-new {
-    background: #388e3c;
-    border-radius: 40px;
-    padding: 0.3rem 1rem;
+    background: #2d7a2d;
+    border-radius: 30px;
+    padding: 0.3rem 0.9rem;
     font-size: 0.7rem;
     font-weight: 600;
     color: white;
-    border: 1px solid #7ab87a;
-    box-shadow: 0 2px 4px rgba(0,20,0,0.2);
-    backdrop-filter: blur(2px);
+    border: 1px solid #4fa04f;
+    box-shadow: none; /* remove any existing shadow */
+    backdrop-filter: none; /* remove blur */
 }
 
 /* category tabs - pill style with nicer active state */
@@ -336,54 +336,183 @@ body {
 }
 
 /* SweetAlert2 custom overrides (mobile friendly) */
+/* COMPLETELY REVAMPED MODAL - MOBILE OPTIMIZED (ORIGINAL STYLE) */
 .swal2-popup {
-    border-radius: 28px !important;
-    padding: 1.2rem 1rem !important;
-    width: 92% !important;
+    border-radius: 16px !important;
+    padding: 1rem 0.8rem !important;
+    width: 94% !important;
     max-width: 340px !important;
     margin: 0 auto !important;
-    font-size: 0.85rem !important;
-    box-shadow: 0 20px 30px -10px #1d3b1d !important;
+    font-size: 0.8rem !important;
+    box-shadow: none !important; /* removed extra shadow */
 }
 
 .swal2-title {
-    font-size: 1.2rem !important;
-    color: #155015 !important;
-    font-weight: 700 !important;
+    font-size: 1.1rem !important;
+    color: #1d541d !important;
+    padding: 0 !important;
+    margin-bottom: 0.5rem !important;
+    font-weight: 600 !important;
+}
+
+.swal2-html-container {
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+}
+
+/* modal inner content - tight and clean */
+.modal-content {
+    text-align: left;
+    width: 100%;
 }
 
 .modal-bundle-name {
     background: #e6f3e6;
-    padding: 0.6rem;
-    border-radius: 18px;
-    margin-bottom: 1rem;
+    padding: 0.5rem;
+    border-radius: 10px;
+    margin-bottom: 0.8rem;
     font-weight: 600;
-    color: #0f3a0f;
+    color: #1d541d;
     text-align: center;
-    font-size: 0.9rem;
-    border: 1px solid #4caf50;
+    font-size: 0.85rem;
+    border: 1px solid #2d7a2d;
+    word-break: break-word;
+}
+
+.input-wrapper {
+    margin-bottom: 0.8rem;
+}
+
+.input-label {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #1d541d;
+    margin-bottom: 0.25rem;
 }
 
 .phone-input-group {
-    border: 1.5px solid #3e9e3e;
-    border-radius: 16px;
+    display: flex;
+    border: 1.5px solid #2d7a2d;
+    border-radius: 12px;
     overflow: hidden;
     background: white;
 }
 
 .phone-prefix {
-    background: #dcf5dc;
-    padding: 0.7rem 0.8rem;
+    background: #e6f3e6;
+    padding: 0.6rem 0.7rem;
     font-weight: 600;
     color: #1d541d;
+    font-size: 0.8rem;
+    white-space: nowrap;
+}
+
+.phone-input {
+    border: none;
+    padding: 0.6rem 0.7rem;
+    width: 100%;
+    outline: none;
+    font-size: 0.85rem;
+}
+
+.phone-input::placeholder {
+    color: #a0b8a0;
+    font-size: 0.75rem;
+}
+
+.input-note {
+    font-size: 0.6rem;
+    color: #2d7a2d;
+    margin-top: 0.2rem;
 }
 
 .summary-box {
     background: #e6f3e6;
-    border-radius: 16px;
-    padding: 0.8rem;
-    border: 1px solid #5cb85c;
-    margin: 1rem 0;
+    border-radius: 12px;
+    padding: 0.6rem;
+    margin: 0.8rem 0;
+    border: 1px solid #2d7a2d;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.75rem;
+    margin-bottom: 0.2rem;
+}
+
+.summary-row.total {
+    font-weight: 700;
+    color: #1d541d;
+    font-size: 0.85rem;
+    margin-top: 0.3rem;
+    padding-top: 0.3rem;
+    border-top: 1px dashed #2d7a2d;
+}
+
+.secure-note {
+    color: #2d7a2d;
+    font-size: 0.6rem;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.2rem;
+}
+
+.swal2-confirm {
+    background: #1d541d !important;
+    border-radius: 30px !important;
+    font-weight: 600 !important;
+    padding: 0.6rem 1.2rem !important;
+    font-size: 0.8rem !important;
+    margin: 0 !important;
+    border: 1px solid #2d7a2d !important;
+    box-shadow: none !important;
+}
+
+.swal2-cancel {
+    background: #f0f0f0 !important;
+    color: #1d541d !important;
+    border-radius: 30px !important;
+    font-weight: 600 !important;
+    padding: 0.6rem 1.2rem !important;
+    font-size: 0.8rem !important;
+    border: 1px solid #2d7a2d !important;
+}
+
+.swal2-actions {
+    margin: 0.5rem 0 0 !important;
+    gap: 0.5rem !important;
+}
+
+/* payment status modals (original) */
+.status-modal-content {
+    text-align: center;
+    padding: 0.2rem;
+}
+
+.status-icon {
+    font-size: 2.2rem;
+    margin-bottom: 0.3rem;
+}
+
+.status-details {
+    background: #e6f3e6;
+    padding: 0.6rem;
+    border-radius: 12px;
+    margin: 0.8rem 0;
+    font-size: 0.8rem;
+    border: 1px solid #2d7a2d;
+}
+
+.status-details div {
+    word-break: break-word;
 }
 
 /* small screens fine-tuning */
