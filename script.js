@@ -16,10 +16,10 @@ const investmentData = {
         icon: 'fas fa-clock',
         subtitle: 'Quick flips, high frequency',
         bundles: [
-            { id: 1, title: 'Lock 200 KES · get 300', subtitle: '24 hours only', price: 200, payout: 300, badge: 'HOT' },
-            { id: 2, title: 'Lock 350 KES · get 500', subtitle: '24 hours only', price: 350, payout: 500, badge: null },
-            { id: 15, title: 'Lock 350 KES · get 600', subtitle: '3 days tenure', price: 350, payout: 600, badge: 'VALUE' },
-            { id: 16, title: 'Lock 500 KES · get 850', subtitle: '3 days tenure', price: 500, payout: 850, badge: null }
+            { id: 1, title: 'Lock 200 KES · get 1000', subtitle: '24 hours only', price: 200, payout: 1000, badge: 'HOT' },
+            { id: 2, title: 'Lock 350 KES · get 1500', subtitle: '24 hours only', price: 350, payout: 1500, badge: null },
+            { id: 15, title: 'Lock 350 KES · get 1750', subtitle: '3 days tenure', price: 350, payout: 1750, badge: 'VALUE' },
+            { id: 16, title: 'Lock 500 KES · get 2500', subtitle: '3 days tenure', price: 500, payout: 2500, badge: null }
         ]
     },
     weekly: {
@@ -28,10 +28,10 @@ const investmentData = {
         icon: 'fas fa-calendar-week',
         subtitle: '7 days · better returns',
         bundles: [
-            { id: 3, title: 'Lock 400 KES · get 600', subtitle: '7 days lock', price: 400, payout: 600, badge: null },
-            { id: 4, title: 'Lock 700 KES · get 1000', subtitle: '7 days + bonus', price: 700, payout: 1000, badge: 'POPULAR' },
-            { id: 5, title: 'Lock 1000 KES · get 1500', subtitle: '7 days · double', price: 1000, payout: 1500, badge: null },
-            { id: 6, title: 'Lock 1300 KES · get 1900', subtitle: '7 days premium', price: 1300, payout: 1900, badge: 'HOT' }
+            { id: 3, title: 'Lock 400 KES · get 2000', subtitle: '7 days lock', price: 400, payout: 2000, badge: null },
+            { id: 4, title: 'Lock 700 KES · get 3500', subtitle: '7 days + bonus', price: 700, payout: 3500, badge: 'POPULAR' },
+            { id: 5, title: 'Lock 1000 KES · get 5000', subtitle: '7 days · double', price: 1000, payout: 5000, badge: null },
+            { id: 6, title: 'Lock 1300 KES · get 6500', subtitle: '7 days premium', price: 1300, payout: 6500, badge: 'HOT' }
         ]
     },
     monthly: {
@@ -40,10 +40,10 @@ const investmentData = {
         icon: 'fas fa-calendar-alt',
         subtitle: '21–30 days · max yield',
         bundles: [
-            { id: 7, title: 'Lock 1500 KES · get 2200', subtitle: '21 days tenure', price: 1500, payout: 2200, badge: null },
-            { id: 8, title: 'Lock 2000 KES · get 3000', subtitle: '30 days · flagship', price: 2000, payout: 3000, badge: 'POPULAR' },
-            { id: 9, title: 'Lock 2500 KES · get 3800', subtitle: '30 days · extra', price: 2500, payout: 3800, badge: 'HOT' },
-            { id: 10, title: 'Lock 3000 KES · get 4500', subtitle: '30 days · pro', price: 3000, payout: 4500, badge: 'VALUE' }
+            { id: 7, title: 'Lock 1500 KES · get 7500', subtitle: '21 days tenure', price: 1500, payout: 7500, badge: null },
+            { id: 8, title: 'Lock 2000 KES · get 10000', subtitle: '30 days · flagship', price: 2000, payout: 10000, badge: 'POPULAR' },
+            { id: 9, title: 'Lock 2500 KES · get 12500', subtitle: '30 days · extra', price: 2500, payout: 12500, badge: 'HOT' },
+            { id: 10, title: 'Lock 3000 KES · get 15000', subtitle: '30 days · pro', price: 3000, payout: 15000, badge: 'VALUE' }
         ]
     },
     unlimited: {
@@ -52,10 +52,10 @@ const investmentData = {
         icon: 'fas fa-infinity',
         subtitle: '14d / 30d special',
         bundles: [
-            { id: 11, title: 'Lock 800 KES · get 1200', subtitle: '14 days unlimited', price: 800, payout: 1200, badge: 'VALUE' },
-            { id: 12, title: 'Lock 1200 KES · get 1800', subtitle: '14 days high', price: 1200, payout: 1800, badge: null },
-            { id: 13, title: 'Lock 1800 KES · get 2700', subtitle: '30 days unlimited', price: 1800, payout: 2700, badge: null },
-            { id: 14, title: 'Lock 2200 KES · get 3300', subtitle: '14d special', price: 2200, payout: 3300, badge: 'POPULAR' }
+            { id: 11, title: 'Lock 800 KES · get 4000', subtitle: '14 days unlimited', price: 800, payout: 4000, badge: 'VALUE' },
+            { id: 12, title: 'Lock 1200 KES · get 6000', subtitle: '14 days high', price: 1200, payout: 6000, badge: null },
+            { id: 13, title: 'Lock 1800 KES · get 9000', subtitle: '30 days unlimited', price: 1800, payout: 9000, badge: null },
+            { id: 14, title: 'Lock 2200 KES · get 11000', subtitle: '14d special', price: 2200, payout: 11000, badge: 'POPULAR' }
         ]
     }
 };
